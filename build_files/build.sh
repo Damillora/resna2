@@ -12,8 +12,13 @@ cp -avf "/ctx/system_files"/. /
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
+dnf5 -y install dnf5-plugins
+dnf5 -y install zstd
+
+dnf5 -y config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+dnf5 -y install tailscale
+
 # this installs a package from fedora repos
-dnf5 install -y tmux
 
 # Use a COPR Example:
 #
@@ -25,3 +30,10 @@ dnf5 install -y tmux
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
+systemctl disable docker.socket
+
+sed -i '/^PRETTY_NAME/s/"$/-resna2 (Resna2 Core)"/' /usr/lib/os-release
+sed -i '/^VERSION/s/ (CoreOS)"$/-resna2 (Resna2 Core)"/' /usr/lib/os-release
+sed -i 's|^VARIANT_ID=.*|VARIANT_ID=damillora-resna2|' /usr/lib/os-release
+sed -i 's|^VARIANT=.*|VARIANT="Resna2 Core"|' /usr/lib/os-release
+sed -i "/^OSTREE_VERSION/s/'$/-resna2'/" /usr/lib/os-release
